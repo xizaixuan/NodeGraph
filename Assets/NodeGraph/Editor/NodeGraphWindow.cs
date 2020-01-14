@@ -17,7 +17,7 @@ public class NodeGraphWindow : EditorWindow
     {
         var root = this.GetRootVisualContainer();
 
-        root.AddStyleSheetPath("Styles/Style");
+        root.AddStyleSheetPath("Styles/NodeGraphView");
         
         var nodeGraphView = new NodeGraphView();
         
