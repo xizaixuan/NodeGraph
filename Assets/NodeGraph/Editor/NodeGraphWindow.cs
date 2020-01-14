@@ -24,7 +24,7 @@ public class NodeGraphWindow : EditorWindow
         nodeGraphView.AddManipulator(new SelectionDragger());
         nodeGraphView.AddManipulator(new ClickSelector());
 
-        nodeGraphView.Add(new ModifierNode());
+        nodeGraphView.Add(new NodeView());
 
         nodeGraphView.StretchToParentSize();
 

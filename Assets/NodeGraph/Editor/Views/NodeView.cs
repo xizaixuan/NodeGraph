@@ -3,6 +3,6 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 
-public class ModifierNode : Node
+public class NodeView : Node
 {
 }
