@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.UIElements;
+using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine.Experimental.UIElements;
 
 public class NodeGraphWindow : EditorWindow
@@ -19,6 +20,10 @@ public class NodeGraphWindow : EditorWindow
         root.AddStyleSheetPath("Styles/Style");
         
         var nodeGraphView = new NodeGraphView();
+        
+        nodeGraphView.AddManipulator(new SelectionDragger());
+        nodeGraphView.AddManipulator(new ClickSelector());
+
         nodeGraphView.Add(new ModifierNode());
 
         nodeGraphView.StretchToParentSize();
