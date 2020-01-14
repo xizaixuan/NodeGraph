@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.Experimental.UIElements;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine.Experimental.UIElements;
+using static UnityEditor.Experimental.UIElements.GraphView.Port;
 
 public class NodeGraphWindow : EditorWindow
 {
@@ -24,7 +25,15 @@ public class NodeGraphWindow : EditorWindow
         nodeGraphView.AddManipulator(new SelectionDragger());
         nodeGraphView.AddManipulator(new ClickSelector());
 
-        nodeGraphView.Add(new NodeView());
+        var node = new NodeView();
+
+        var inputPort = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Single, typeof(int), "Input");
+        var outputPort = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Single, typeof(int), "Output");
+
+        node.inputContainer.Add(inputPort);
+        node.outputContainer.Add(outputPort);
+
+        nodeGraphView.Add(node);
 
         nodeGraphView.StretchToParentSize();
 
