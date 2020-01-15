@@ -8,7 +8,8 @@ namespace ModifierNodeGraph
 {
     public static class NodeProvider
     {
-        private static Dictionary<Type, Type> m_NodeViewType = new Dictionary<Type, Type>();
+        private static Dictionary<Type, Type> m_ViewNodeType = new Dictionary<Type, Type>();
+        private static Dictionary<Type, Type> m_ModifierNodeType = new Dictionary<Type, Type>();
 
         static NodeProvider()
         {
@@ -18,6 +19,8 @@ namespace ModifierNodeGraph
                 {
                     if (type.IsSubclassOf(typeof(NodeView)))
                         AddViewNode(type);
+                    else if (type.IsSubclassOf(typeof(ModifierNode)))
+                        AddModifierNode(type);
                 }
             }
         }
@@ -46,7 +49,15 @@ namespace ModifierNodeGraph
         {
             if (type.GetCustomAttributes(typeof(ViewNodeAttribute), false) is ViewNodeAttribute[] attrs && attrs.Length > 0)
             {
-                m_NodeViewType[attrs.First().NodeType] = type;
+                m_ViewNodeType[attrs.First().NodeType] = type;
+            }
+        }
+
+        static void AddModifierNode(Type type)
+        {
+            if (type.GetCustomAttributes(typeof(ModifierNodeAttribute), false) is ModifierNodeAttribute[] attrs && attrs.Length > 0)
+            {
+                m_ModifierNodeType[attrs.First().NodeType] = type;
             }
         }
     }
