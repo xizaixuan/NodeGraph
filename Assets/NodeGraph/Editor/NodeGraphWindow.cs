@@ -26,15 +26,16 @@ public class NodeGraphWindow : EditorWindow
         nodeGraphView.AddManipulator(new SelectionDragger());
         nodeGraphView.AddManipulator(new ClickSelector());
 
-        var node = new IntNodeView();
+        var nodeView = new IntNodeView();
+        nodeView.Initialize(new IntNode());
 
         var inputPort = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Single, typeof(int), "Input");
         var outputPort = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Single, typeof(int), "Output");
 
-        node.inputContainer.Add(inputPort);
-        node.outputContainer.Add(outputPort);
+        nodeView.inputContainer.Add(inputPort);
+        nodeView.outputContainer.Add(outputPort);
 
-        nodeGraphView.Add(node);
+        nodeGraphView.Add(nodeView);
 
         nodeGraphView.StretchToParentSize();
 
