@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 
-public class PortView : Port
+namespace ModifierNodeGraph
 {
-    public PortView(Orientation portOrientation, Direction portDirection, Capacity portCapacity, Type type, string name)
-        : base(portOrientation, portDirection, portCapacity, type)
+    public class PortView : Port
     {
-        portName = name;
+        public PortView(Orientation portOrientation, Direction portDirection, Capacity portCapacity, Type type, string name)
+            : base(portOrientation, portDirection, portCapacity, type)
+        {
+            portName = name;
+        }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ModifierNode
+namespace ModifierNodeGraph
 {
     public static class NodeProvider
     {
@@ -17,7 +17,7 @@ namespace ModifierNode
                 if (type.IsClass && !type.IsAbstract)
                 {
                     if (type.IsSubclassOf(typeof(NodeView)))
-                        AddNodeViewType(type);
+                        AddViewNode(type);
                 }
             }
         }
@@ -42,9 +42,9 @@ namespace ModifierNode
             }
         }
 
-        static void AddNodeViewType(Type type)
+        static void AddViewNode(Type type)
         {
-            if (type.GetCustomAttributes(typeof(NodeViewAttribute), false) is NodeViewAttribute[] attrs && attrs.Length > 0)
+            if (type.GetCustomAttributes(typeof(ViewNodeAttribute), false) is ViewNodeAttribute[] attrs && attrs.Length > 0)
             {
                 m_NodeViewType[attrs.First().NodeType] = type;
             }
