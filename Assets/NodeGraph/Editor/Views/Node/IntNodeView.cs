@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ModifierNodeGraph
 {
-    [ViewNode(typeof(IntNodeView))]
+    [NodeView(typeof(IntNodeView))]
     public class IntNodeView : NodeView
     {
         public override void Enable()

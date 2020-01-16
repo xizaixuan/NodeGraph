@@ -18,9 +18,9 @@ namespace ModifierNodeGraph
                 if (type.IsClass && !type.IsAbstract)
                 {
                     if (type.IsSubclassOf(typeof(NodeView)))
-                        AddViewNode(type);
+                        AddNodeView(type);
                     else if (type.IsSubclassOf(typeof(ModifierNode)))
-                        AddModifierNode(type);
+                        AddNode(type);
                 }
             }
         }
@@ -45,17 +45,17 @@ namespace ModifierNodeGraph
             }
         }
 
-        static void AddViewNode(Type type)
+        static void AddNodeView(Type type)
         {
-            if (type.GetCustomAttributes(typeof(ViewNodeAttribute), false) is ViewNodeAttribute[] attrs && attrs.Length > 0)
+            if (type.GetCustomAttributes(typeof(NodeViewAttribute), false) is NodeViewAttribute[] attrs && attrs.Length > 0)
             {
                 m_ViewNodeType[attrs.First().NodeType] = type;
             }
         }
 
-        static void AddModifierNode(Type type)
+        static void AddNode(Type type)
         {
-            if (type.GetCustomAttributes(typeof(ModifierNodeAttribute), false) is ModifierNodeAttribute[] attrs && attrs.Length > 0)
+            if (type.GetCustomAttributes(typeof(NodeAttribute), false) is NodeAttribute[] attrs && attrs.Length > 0)
             {
                 m_ModifierNodeType[attrs.First().NodeType] = type;
             }

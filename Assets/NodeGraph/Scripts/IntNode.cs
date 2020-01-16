@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ModifierNodeGraph
 {
-    [ModifierNode(typeof(IntNode))]
+    [Node(typeof(IntNode))]
     public class IntNode : ModifierNode
     {
         [Input]

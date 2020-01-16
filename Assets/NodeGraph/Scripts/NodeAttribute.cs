@@ -28,11 +28,11 @@ namespace ModifierNodeGraph
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class ModifierNodeAttribute : Attribute
+    public class NodeAttribute : Attribute
     {
         public Type NodeType;
 
-        public ModifierNodeAttribute(Type type)
+        public NodeAttribute(Type type)
         {
             NodeType = type;
         }

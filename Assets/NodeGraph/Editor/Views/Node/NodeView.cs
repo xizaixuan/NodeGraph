@@ -6,7 +6,7 @@ using UnityEngine.Experimental.UIElements;
 
 namespace ModifierNodeGraph
 {
-    [ViewNode(typeof(NodeView))]
+    [NodeView(typeof(NodeView))]
     public class NodeView : Node
     {
         public ModifierNode TargetNode = null;
