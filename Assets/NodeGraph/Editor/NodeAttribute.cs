@@ -6,11 +6,11 @@ using UnityEngine;
 namespace ModifierNodeGraph
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class NodeViewAttribute : Attribute
+    public class BindNodeAttribute : Attribute
     {
         public Type NodeType;
 
-        public NodeViewAttribute(Type type)
+        public BindNodeAttribute(Type type)
         {
             NodeType = type;
         }

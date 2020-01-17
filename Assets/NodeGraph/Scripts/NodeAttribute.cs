@@ -28,13 +28,13 @@ namespace ModifierNodeGraph
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class NodeAttribute : Attribute
-    {
-        public Type NodeType;
+	public class NodeMenuItemAttribute : Attribute
+	{
+		public string	ItemName;
 
-        public NodeAttribute(Type type)
-        {
-            NodeType = type;
-        }
-    }
+		public NodeMenuItemAttribute(string itemName = null)
+		{
+            ItemName = itemName;
+		}
+	}
 }
