@@ -10,10 +10,13 @@ namespace ModifierNodeGraph
     [BindNode(typeof(ModifierNode))]
     public class NodeView : Node
     {
+        public NodeGraphView Owner = null;
         public ModifierNode TargetNode = null;
 
-        public void Initialize(ModifierNode node)
+        public void Initialize(NodeGraphView owner, ModifierNode node)
         {
+            Owner = owner;
+
             TargetNode = node;
 
             InitializePorts();
@@ -23,8 +26,8 @@ namespace ModifierNodeGraph
 
         public void InitializePorts()
         {
-            var inputPort = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Single, typeof(int), "Input");
-            var outputPort = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Single, typeof(int), "Output");
+            var inputPort = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Single, typeof(int), Owner.ConnectorListener, "Input");
+            var outputPort = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Single, typeof(int), Owner.ConnectorListener, "Output");
 
             this.inputContainer.Add(inputPort);
             this.outputContainer.Add(outputPort);

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
@@ -9,9 +10,13 @@ using static UnityEditor.Experimental.UIElements.GraphView.Port;
 
 public class NodeGraphView : GraphView
 {
+    public EdgeConnectorListener ConnectorListener;
+
     public NodeGraphView()
     {
         InitializeManipulators();
+
+        ConnectorListener = new EdgeConnectorListener(this);
 
         this.StretchToParentSize();
     }
@@ -48,8 +53,26 @@ public class NodeGraphView : GraphView
         if (viewType != null)
         {
             var nodeView = Activator.CreateInstance(viewType) as NodeView;
-            nodeView.Initialize(node);
-            Add(nodeView);
+            nodeView.Initialize(this, node);
+            AddElement(nodeView);
         }
+    }
+
+    public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+    {
+        var compatiblePorts = new List<Port>();
+
+        compatiblePorts.AddRange(ports.ToList().Where(p =>
+        {
+            if (p.direction == startPort.direction)
+                return false;
+
+            if (!p.portType.IsAssignableFrom(startPort.portType))
+                return false;
+
+            return true;
+        }));
+
+        return compatiblePorts;
     }
 }
