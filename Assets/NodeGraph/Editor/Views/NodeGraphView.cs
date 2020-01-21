@@ -10,15 +10,19 @@ using static UnityEditor.Experimental.UIElements.GraphView.Port;
 
 public class NodeGraphView : GraphView
 {
-    public EdgeConnectorListener ConnectorListener;
+    public EdgeConnectorListener ConnectorListener = null;
+    public NodeGraph Graph = null;
 
-    public NodeGraphView()
+    public NodeGraphView(NodeGraph graph)
     {
-        InitializeManipulators();
+        Graph = graph;
 
         ConnectorListener = new EdgeConnectorListener(this);
 
         this.StretchToParentSize();
+
+        InitializeManipulators();
+        InitializeNodeViews();
     }
 
     private void InitializeManipulators()
@@ -42,11 +46,11 @@ public class NodeGraphView : GraphView
     private void CreateNodeFromType(Type type)
     {
         var node = Activator.CreateInstance(type) as ModifierNode;
-
-        AddNode(node);
+        Graph.AddNode(node);
+        AddNodeView(node);
     }
 
-    private void AddNode(ModifierNode node)
+    private void AddNodeView(ModifierNode node)
     {
         var viewType = NodeProvider.GetNodeViewTypeFromNodeType(node.GetType());
 
@@ -74,5 +78,11 @@ public class NodeGraphView : GraphView
         }));
 
         return compatiblePorts;
+    }
+
+    private void InitializeNodeViews()
+    {
+        foreach (var node in Graph.Nodes)
+            AddNodeView(node);
     }
 }
