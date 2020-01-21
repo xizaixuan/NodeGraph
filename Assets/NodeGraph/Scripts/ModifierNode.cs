@@ -6,5 +6,6 @@ namespace ModifierNodeGraph
 {
     public abstract class ModifierNode
     {
+        public Rect Position;
     }
 }

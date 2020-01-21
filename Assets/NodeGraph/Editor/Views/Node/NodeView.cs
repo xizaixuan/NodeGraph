@@ -21,6 +21,8 @@ namespace ModifierNodeGraph
 
             InitializePorts();
 
+            InitializeView();
+
             Enable();
         }
 
@@ -33,8 +35,20 @@ namespace ModifierNodeGraph
             this.outputContainer.Add(outputPort);
         }
 
+        void InitializeView()
+        {
+            SetPosition(TargetNode.Position);
+        }
+
         public virtual void Enable()
         {
+        }
+
+        public override void SetPosition(Rect newPosition)
+        {
+            base.SetPosition(newPosition);
+
+            TargetNode.Position = newPosition;
         }
     }
 }

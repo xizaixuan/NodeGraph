@@ -19,10 +19,10 @@ public class NodeGraphView : GraphView
 
         ConnectorListener = new EdgeConnectorListener(this);
 
-        this.StretchToParentSize();
-
         InitializeManipulators();
         InitializeNodeViews();
+
+        this.StretchToParentSize();
     }
 
     private void InitializeManipulators()
@@ -37,15 +37,19 @@ public class NodeGraphView : GraphView
     {
         evt.menu.AppendSeparator();
 
-        foreach (var nodeMenuItem in NodeProvider.GetNodeMenuEntries())
-            evt.menu.AppendAction(nodeMenuItem.Key, (e) => CreateNodeFromType(nodeMenuItem.Value), DropdownMenu.MenuAction.AlwaysEnabled);
+        var mousePosition = evt.mousePosition;
+        foreach (var menuItem in NodeProvider.GetNodeMenuEntries())
+        {
+            evt.menu.AppendAction(menuItem.Key, (e) => CreateNodeFromType(menuItem.Value, mousePosition), DropdownMenu.MenuAction.AlwaysEnabled);
+        }
 
         base.BuildContextualMenu(evt);
     }
 
-    private void CreateNodeFromType(Type type)
+    private void CreateNodeFromType(Type type, Vector2 position)
     {
         var node = Activator.CreateInstance(type) as ModifierNode;
+        node.Position = new Rect(position, new Vector2(50, 50));
         Graph.AddNode(node);
         AddNodeView(node);
     }
