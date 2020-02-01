@@ -5,6 +5,8 @@ using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
 
+using EdgeView = UnityEditor.Experimental.UIElements.GraphView.Edge;
+
 namespace ModifierNodeGraph
 {
     public class PortView : Port
@@ -13,7 +15,7 @@ namespace ModifierNodeGraph
             : base(portOrientation, portDirection, portCapacity, type)
         {
             portName = name;
-            m_EdgeConnector = new EdgeConnector<Edge>(connectorListener);
+            m_EdgeConnector = new EdgeConnector<EdgeView>(connectorListener);
 
             this.AddManipulator(m_EdgeConnector);
         }

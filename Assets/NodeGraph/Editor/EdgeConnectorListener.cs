@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 
+using EdgeView = UnityEditor.Experimental.UIElements.GraphView.Edge;
 
 namespace ModifierNodeGraph
 {
@@ -15,12 +16,12 @@ namespace ModifierNodeGraph
             m_Graph = graph;
         }
 
-        public void OnDropOutsidePort(Edge edge, Vector2 position)
+        public void OnDropOutsidePort(EdgeView edge, Vector2 position)
         {
             throw new System.NotImplementedException();
         }
 
-        public void OnDrop(GraphView graphView, Edge edge)
+        public void OnDrop(GraphView graphView, EdgeView edge)
         {
             var leftSlot = edge.output;
             var rightSlot = edge.input;
