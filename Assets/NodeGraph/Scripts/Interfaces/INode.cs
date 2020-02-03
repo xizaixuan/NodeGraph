@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace ModifierNodeGraph
 {
-    public abstract class ModifierNode : INode
+    public interface INode
     {
-        public Rect Position;
     }
 }
