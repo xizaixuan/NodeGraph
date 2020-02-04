@@ -7,6 +7,12 @@ namespace ModifierNodeGraph
 {
     public abstract class ModifierNode : INode
     {
-        public Rect Position;
+        private DrawState m_DrawState;
+
+        public DrawState drawState
+        {
+            get { return m_DrawState; }
+            set { m_DrawState = value; }
+        }
     }
 }

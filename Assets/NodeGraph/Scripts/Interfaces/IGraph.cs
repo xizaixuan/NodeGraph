@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace ModifierNodeGraph
 {
-    public class IGraph
+    public interface IGraph
     {
+        void AddNode(INode node);
+        void RemoveNode(INode node);
     }
 }

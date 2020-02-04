@@ -49,7 +49,9 @@ public class NodeGraphView : GraphView
     private void CreateNodeFromType(Type type, Vector2 position)
     {
         var node = Activator.CreateInstance(type) as ModifierNode;
-        node.Position = new Rect(position, new Vector2(50, 50));
+        var drawState = node.drawState;
+        drawState.position = new Rect(position, new Vector2(50, 50));
+        node.drawState = drawState;
         Graph.AddNode(node);
         AddNodeView(node);
     }
@@ -87,6 +89,6 @@ public class NodeGraphView : GraphView
     private void InitializeNodeViews()
     {
         foreach (var node in Graph.Nodes)
-            AddNodeView(node);
+            AddNodeView(node as ModifierNode);
     }
 }

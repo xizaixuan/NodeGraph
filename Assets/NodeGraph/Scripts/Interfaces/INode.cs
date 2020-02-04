@@ -7,5 +7,6 @@ namespace ModifierNodeGraph
 {
     public interface INode
     {
+        DrawState drawState { get; set; }
     }
 }

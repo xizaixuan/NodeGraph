@@ -37,7 +37,7 @@ namespace ModifierNodeGraph
 
         void InitializeView()
         {
-            SetPosition(TargetNode.Position);
+            SetPosition(TargetNode.drawState.position);
         }
 
         public virtual void Enable()
@@ -48,7 +48,9 @@ namespace ModifierNodeGraph
         {
             base.SetPosition(newPosition);
 
-            TargetNode.Position = newPosition;
+            var drawState = TargetNode.drawState;
+            drawState.position = newPosition;
+            TargetNode.drawState = drawState;
         }
     }
 }
