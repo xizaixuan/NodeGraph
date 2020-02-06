@@ -68,24 +68,6 @@ public class NodeGraphView : GraphView
         }
     }
 
-    public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-    {
-        var compatiblePorts = new List<Port>();
-
-        compatiblePorts.AddRange(ports.ToList().Where(p =>
-        {
-            if (p.direction == startPort.direction)
-                return false;
-
-            if (!p.portType.IsAssignableFrom(startPort.portType))
-                return false;
-
-            return true;
-        }));
-
-        return compatiblePorts;
-    }
-
     private void InitializeNodeViews()
     {
         foreach (var node in Graph.GetNodes<ModifierNode>())
