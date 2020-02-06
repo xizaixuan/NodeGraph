@@ -17,7 +17,7 @@ public class NodeGraphView : GraphView
     {
         Graph = graph;
 
-        ConnectorListener = new EdgeConnectorListener(this);
+        ConnectorListener = new EdgeConnectorListener(graph);
 
         InitializeManipulators();
         InitializeNodeViews();
@@ -88,7 +88,7 @@ public class NodeGraphView : GraphView
 
     private void InitializeNodeViews()
     {
-        foreach (var node in Graph.Nodes)
-            AddNodeView(node as ModifierNode);
+        foreach (var node in Graph.GetNodes<ModifierNode>())
+            AddNodeView(node);
     }
 }

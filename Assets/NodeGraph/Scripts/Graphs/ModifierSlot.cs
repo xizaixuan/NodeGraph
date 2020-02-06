@@ -10,7 +10,7 @@ namespace ModifierNodeGraph
 
         string m_ModifierOutputName;
 
-        protected ModifierSlot(int slotId, string displayName, string modifierOutputName, SlotType slotType)
+        public ModifierSlot(int slotId, string displayName, string modifierOutputName, SlotType slotType)
         {
             m_Id = slotId;
             m_DisplayName = displayName;
@@ -23,7 +23,11 @@ namespace ModifierNodeGraph
             get { return m_Id; }
         }
 
-        public string displayName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public virtual string displayName
+        {
+            get { return m_DisplayName; }
+            set { m_DisplayName = value; }
+        }
 
         SlotType m_SlotType = SlotType.Input;
 
@@ -50,6 +54,9 @@ namespace ModifierNodeGraph
             private set { m_ModifierOutputName = value; }
         }
 
+        public virtual void CopyValuesFrom(ModifierSlot foundSlot)
+        {
+        }
 
         public bool Equals(ModifierSlot other)
         {

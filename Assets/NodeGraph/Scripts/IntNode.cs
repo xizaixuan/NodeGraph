@@ -9,5 +9,11 @@ namespace ModifierNodeGraph
     {
         [Input]
         public int Value;
+
+        public IntNode()
+        {
+            AddSlot(new ModifierSlot(0, "InputSlot", "ModifierOutput", SlotType.Input));
+            AddSlot(new ModifierSlot(1, "OutputSlot", "ModifierOutput", SlotType.Output));
+        }
     }
 }

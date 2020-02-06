@@ -28,11 +28,17 @@ namespace ModifierNodeGraph
 
         public void InitializePorts()
         {
-            var inputPort = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Single, typeof(int), Owner.ConnectorListener, "Input");
-            var outputPort = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Single, typeof(int), Owner.ConnectorListener, "Output");
+            foreach (var slot in TargetNode.GetInputSlots<ModifierSlot>())
+            {
+                var port = ModifierPort.Create(slot, Owner.ConnectorListener);
+                this.inputContainer.Add(port);
+            }
 
-            this.inputContainer.Add(inputPort);
-            this.outputContainer.Add(outputPort);
+            foreach (var slot in TargetNode.GetOutputSlots<ModifierSlot>())
+            {
+                var port = ModifierPort.Create(slot, Owner.ConnectorListener);
+                this.outputContainer.Add(port);
+            }
         }
 
         void InitializeView()

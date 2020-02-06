@@ -45,4 +45,13 @@ namespace ModifierNodeGraph
             }
         }
     }
+
+    static class ModifierPortExtensions
+    {
+        public static ModifierSlot GetSlot(this Port port)
+        {
+            var modifierPort = port as ModifierPort;
+            return modifierPort != null ? modifierPort.slot : null;
+        }
+    }
 }
