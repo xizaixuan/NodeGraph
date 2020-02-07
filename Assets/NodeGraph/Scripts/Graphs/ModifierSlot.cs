@@ -54,6 +54,13 @@ namespace ModifierNodeGraph
             private set { m_ModifierOutputName = value; }
         }
 
+        public bool IsCompatibleWith(ModifierSlot otherSlot)
+        {
+            return otherSlot != null
+                && otherSlot.owner != owner
+                && otherSlot.isInputSlot != isInputSlot;
+        }
+
         public virtual void CopyValuesFrom(ModifierSlot foundSlot)
         {
         }

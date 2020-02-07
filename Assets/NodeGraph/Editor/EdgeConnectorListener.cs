@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.UIElements.GraphView;
+﻿using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 
 using EdgeView = UnityEditor.Experimental.UIElements.GraphView.Edge;
@@ -9,26 +7,26 @@ namespace ModifierNodeGraph
 {
     public class EdgeConnectorListener : IEdgeConnectorListener
     {
-        readonly NodeGraphView m_Graph;
+        readonly NodeGraph m_Graph;
 
-        public EdgeConnectorListener(NodeGraphView graph)
+        public EdgeConnectorListener(NodeGraph graph)
         {
             m_Graph = graph;
         }
 
-        public void OnDropOutsidePort(EdgeView edge, Vector2 position)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void OnDrop(GraphView graphView, EdgeView edge)
         {
-            var leftSlot = edge.output;
-            var rightSlot = edge.input;
+            var leftSlot = edge.output.GetSlot();
+            var rightSlot = edge.input.GetSlot();
             if (leftSlot != null && rightSlot != null)
             {
-                m_Graph.AddElement(edge);
+                m_Graph.Connect(leftSlot.slotReference, rightSlot.slotReference);
+                graphView.AddElement(edge);
             }
+        }
+
+        public void OnDropOutsidePort(EdgeView edge, Vector2 position)
+        {
         }
     }
 }

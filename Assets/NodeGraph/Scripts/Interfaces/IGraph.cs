@@ -8,5 +8,6 @@ namespace ModifierNodeGraph
     {
         void AddNode(INode node);
         void RemoveNode(INode node);
+        IEdge Connect(SlotReference fromSlotRef, SlotReference toSlotRef);
     }
 }
