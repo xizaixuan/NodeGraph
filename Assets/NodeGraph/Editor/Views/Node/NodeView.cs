@@ -12,6 +12,8 @@ namespace ModifierNodeGraph
     {
         public NodeGraphView Owner = null;
         public ModifierNode TargetNode = null;
+        public ModifierNode node { get { return TargetNode; } }
+
 
         public void Initialize(NodeGraphView owner, ModifierNode node)
         {
