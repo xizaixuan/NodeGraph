@@ -37,4 +37,15 @@ namespace ModifierNodeGraph
             ItemName = itemName;
 		}
 	}
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class BindNodeAttribute : Attribute
+    {
+        public Type NodeType;
+
+        public BindNodeAttribute(Type type)
+        {
+            NodeType = type;
+        }
+    }
 }
