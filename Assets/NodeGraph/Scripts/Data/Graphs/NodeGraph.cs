@@ -8,6 +8,8 @@ using UnityEngine;
 [Serializable, CreateAssetMenu(fileName = "NodeGraph", menuName = "NodeGraph")]
 public class NodeGraph : ScriptableObject, IGraph
 {
+    public IGraphObject owner { get; set; }
+
     List<ModifierNode> m_Nodes = new List<ModifierNode>();
 
     Dictionary<Guid, INode> m_NodeDictionary = new Dictionary<Guid, INode>();
