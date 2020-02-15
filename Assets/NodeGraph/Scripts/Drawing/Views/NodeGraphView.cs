@@ -66,7 +66,7 @@ public class NodeGraphView : GraphView
         if (viewType != null)
         {
             var nodeView = Activator.CreateInstance(viewType) as NodeView;
-            nodeView.Initialize(this, node);
+            nodeView.Initialize(node, ConnectorListener);
             AddElement(nodeView);
         }
     }

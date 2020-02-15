@@ -10,14 +10,16 @@ namespace ModifierNodeGraph
     [BindNode(typeof(ModifierNode))]
     public class NodeView : Node
     {
-        public NodeGraphView Owner = null;
+        IEdgeConnectorListener m_ConnectorListener;
+
         public ModifierNode TargetNode = null;
         public ModifierNode node { get { return TargetNode; } }
 
 
-        public void Initialize(NodeGraphView owner, ModifierNode node)
+
+        public void Initialize(ModifierNode node, IEdgeConnectorListener connectorListener)
         {
-            Owner = owner;
+            m_ConnectorListener = connectorListener;
 
             TargetNode = node;
 
@@ -32,7 +34,7 @@ namespace ModifierNodeGraph
         {
             foreach (var slot in TargetNode.GetSlots<ModifierSlot>())
             {
-                var port = ModifierPort.Create(slot, Owner.ConnectorListener);
+                var port = ModifierPort.Create(slot, m_ConnectorListener);
                 if (slot.isOutputSlot)
                     outputContainer.Add(port);
                 else
