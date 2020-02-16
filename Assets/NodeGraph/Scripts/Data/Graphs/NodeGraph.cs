@@ -5,115 +5,118 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public class NodeGraph : IGraph
+namespace ModifierNodeGraph
 {
-    public IGraphObject owner { get; set; }
-
-    List<ModifierNode> m_Nodes = new List<ModifierNode>();
-
-    Dictionary<Guid, INode> m_NodeDictionary = new Dictionary<Guid, INode>();
-
-    public IEnumerable<T> GetNodes<T>() where T : INode
+    [Serializable]
+    public class NodeGraph : IGraph
     {
-        return m_Nodes.Where(x => x != null).OfType<T>();
-    }
+        public IGraphObject owner { get; set; }
 
-    List<IEdge> m_Edges = new List<IEdge>();
+        List<ModifierNode> m_Nodes = new List<ModifierNode>();
 
-    public IEnumerable<IEdge> edges
-    {
-        get { return m_Edges; }
-    }
+        Dictionary<Guid, INode> m_NodeDictionary = new Dictionary<Guid, INode>();
 
-    public void AddNode(INode node)
-    {
-        if (node is ModifierNode)
+        public IEnumerable<T> GetNodes<T>() where T : INode
         {
-            AddNodeNoValidate(node);
+            return m_Nodes.Where(x => x != null).OfType<T>();
         }
-        else
+
+        List<IEdge> m_Edges = new List<IEdge>();
+
+        public IEnumerable<IEdge> edges
         {
-            Debug.LogWarningFormat("Trying to add node {0} to Node graph, but it is not a {1}", node, typeof(ModifierNode));
+            get { return m_Edges; }
         }
-    }
 
-    void AddNodeNoValidate(INode node)
-    {
-        var modifierNode = (ModifierNode)node;
-        modifierNode.owner = this;
-        
-        m_Nodes.Add(modifierNode);
-        m_NodeDictionary.Add(modifierNode.guid, modifierNode);
-    }
+        public void AddNode(INode node)
+        {
+            if (node is ModifierNode)
+            {
+                AddNodeNoValidate(node);
+            }
+            else
+            {
+                Debug.LogWarningFormat("Trying to add node {0} to Node graph, but it is not a {1}", node, typeof(ModifierNode));
+            }
+        }
 
-    public void RemoveNode(INode node)
-    {
-        RemoveNodeNoValidate(node);
-    }
+        void AddNodeNoValidate(INode node)
+        {
+            var modifierNode = (ModifierNode)node;
+            modifierNode.owner = this;
 
-    void RemoveNodeNoValidate(INode node)
-    {
-        var modifierNode = (ModifierNode)node;
+            m_Nodes.Add(modifierNode);
+            m_NodeDictionary.Add(modifierNode.guid, modifierNode);
+        }
 
-        m_Nodes.Remove(node as ModifierNode);
-        m_NodeDictionary.Remove(modifierNode.guid);
-    }
+        public void RemoveNode(INode node)
+        {
+            RemoveNodeNoValidate(node);
+        }
 
-    IEdge ConnectNoValidate(SlotReference fromSlotRef, SlotReference toSlotRef)
-    {
-        var fromNode = GetNodeFromGuid(fromSlotRef.nodeGuid);
-        var toNode = GetNodeFromGuid(toSlotRef.nodeGuid);
+        void RemoveNodeNoValidate(INode node)
+        {
+            var modifierNode = (ModifierNode)node;
 
-        if (fromNode == null || toNode == null)
-            return null;
+            m_Nodes.Remove(node as ModifierNode);
+            m_NodeDictionary.Remove(modifierNode.guid);
+        }
 
-//         // if fromNode is already connected to toNode
-//         // do now allow a connection as toNode will then
-//         // have an edge to fromNode creating a cycle.
-//         // if this is parsed it will lead to an infinite loop.
-//         var dependentNodes = new List<INode>();
-//         NodeUtils.CollectNodesNodeFeedsInto(dependentNodes, toNode);
-//         if (dependentNodes.Contains(fromNode))
-//             return null;
+        IEdge ConnectNoValidate(SlotReference fromSlotRef, SlotReference toSlotRef)
+        {
+            var fromNode = GetNodeFromGuid(fromSlotRef.nodeGuid);
+            var toNode = GetNodeFromGuid(toSlotRef.nodeGuid);
 
-        var fromSlot = fromNode.FindSlot<ISlot>(fromSlotRef.slotId);
-        var toSlot = toNode.FindSlot<ISlot>(toSlotRef.slotId);
+            if (fromNode == null || toNode == null)
+                return null;
 
-        if (fromSlot.isOutputSlot == toSlot.isOutputSlot)
-            return null;
+            //         // if fromNode is already connected to toNode
+            //         // do now allow a connection as toNode will then
+            //         // have an edge to fromNode creating a cycle.
+            //         // if this is parsed it will lead to an infinite loop.
+            //         var dependentNodes = new List<INode>();
+            //         NodeUtils.CollectNodesNodeFeedsInto(dependentNodes, toNode);
+            //         if (dependentNodes.Contains(fromNode))
+            //             return null;
 
-        var outputSlot = fromSlot.isOutputSlot ? fromSlotRef : toSlotRef;
-        var inputSlot = fromSlot.isInputSlot ? fromSlotRef : toSlotRef;
+            var fromSlot = fromNode.FindSlot<ISlot>(fromSlotRef.slotId);
+            var toSlot = toNode.FindSlot<ISlot>(toSlotRef.slotId);
 
-//         s_TempEdges.Clear();
-//         GetEdges(inputSlot, s_TempEdges);
+            if (fromSlot.isOutputSlot == toSlot.isOutputSlot)
+                return null;
 
-//         // remove any inputs that exits before adding
-//         foreach (var edge in s_TempEdges)
-//         {
-//             RemoveEdgeNoValidate(edge);
-//         }
+            var outputSlot = fromSlot.isOutputSlot ? fromSlotRef : toSlotRef;
+            var inputSlot = fromSlot.isInputSlot ? fromSlotRef : toSlotRef;
 
-        var newEdge = new Edge(outputSlot, inputSlot);
-        m_Edges.Add(newEdge);
-//        m_AddedEdges.Add(newEdge);
-//        AddEdgeToNodeEdges(newEdge);
+            //         s_TempEdges.Clear();
+            //         GetEdges(inputSlot, s_TempEdges);
 
-        //Debug.LogFormat("Connected edge: {0} -> {1} ({2} -> {3})\n{4}", newEdge.outputSlot.nodeGuid, newEdge.inputSlot.nodeGuid, fromNode.name, toNode.name, Environment.StackTrace);
-        return newEdge;
-    }
+            //         // remove any inputs that exits before adding
+            //         foreach (var edge in s_TempEdges)
+            //         {
+            //             RemoveEdgeNoValidate(edge);
+            //         }
 
-    public IEdge Connect(SlotReference fromSlotRef, SlotReference toSlotRef)
-    {
-        var newEdge = ConnectNoValidate(fromSlotRef, toSlotRef);
-        return newEdge;
-    }
+            var newEdge = new Edge(outputSlot, inputSlot);
+            m_Edges.Add(newEdge);
+            //        m_AddedEdges.Add(newEdge);
+            //        AddEdgeToNodeEdges(newEdge);
 
-    public INode GetNodeFromGuid(Guid guid)
-    {
-        INode node;
-        m_NodeDictionary.TryGetValue(guid, out node);
-        return node;
+            //Debug.LogFormat("Connected edge: {0} -> {1} ({2} -> {3})\n{4}", newEdge.outputSlot.nodeGuid, newEdge.inputSlot.nodeGuid, fromNode.name, toNode.name, Environment.StackTrace);
+            return newEdge;
+        }
+
+        public IEdge Connect(SlotReference fromSlotRef, SlotReference toSlotRef)
+        {
+            var newEdge = ConnectNoValidate(fromSlotRef, toSlotRef);
+            return newEdge;
+        }
+
+        public INode GetNodeFromGuid(Guid guid)
+        {
+            INode node;
+            m_NodeDictionary.TryGetValue(guid, out node);
+            return node;
+        }
     }
 }

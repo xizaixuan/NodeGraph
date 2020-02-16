@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEditor.Experimental.UIElements;
@@ -8,6 +10,8 @@ using UnityEngine;
 using UnityEngine.Experimental.UIElements;
 using static UnityEditor.Experimental.UIElements.GraphView.Port;
 using Object = UnityEngine.Object;
+
+
 
 namespace ModifierNodeGraph
 {
@@ -100,32 +104,10 @@ namespace ModifierNodeGraph
             {
                 persistenceKey = selectedGuid,
             };
+            
+            titleContent = new GUIContent(asset.name.Split('/').Last());
 
             Repaint();
-        }
-
-        public static NodeGraphWindow Open()
-        {
-            var window = GetWindow<NodeGraphWindow>();
-            window.Show();
-            return window;
-        }
-
-        private void OnEnable()
-        {
-        }
-
-        public void InitializeGraph(NodeGraph graph)
-        {
-            Graph = graph;
-
-            var root = this.GetRootVisualContainer();
-
-            var nodeGraphView = new NodeGraphView(Graph);
-
-            nodeGraphView.AddStyleSheetPath("Styles/NodeGraphView");
-
-            root.Add(nodeGraphView);
         }
     }
 }

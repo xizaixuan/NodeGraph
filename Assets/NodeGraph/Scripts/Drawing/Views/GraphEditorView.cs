@@ -23,6 +23,8 @@ namespace ModifierNodeGraph
 
         public GraphEditorView(EditorWindow editorWindow, NodeGraph graph)
         {
+            AddStyleSheetPath("Styles/GraphEditorView");
+
             m_Graph = graph;
 
             var content = new VisualElement { name = "content" };

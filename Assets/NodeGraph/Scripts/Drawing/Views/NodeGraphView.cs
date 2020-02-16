@@ -17,6 +17,8 @@ public class NodeGraphView : GraphView
 
     public NodeGraphView(NodeGraph graph)
     {
+        AddStyleSheetPath("Styles/NodeGraphView");
+
         Graph = graph;
 
         ConnectorListener = new EdgeConnectorListener(graph);

@@ -1,0 +1,10 @@
+GraphEditorView {
+    flex-direction: column;
+    background: #f00;
+    flex: 1;
+}
+
+GraphEditorView > #content {
+    flex: 1;
+    flex-direction: row;
+}
