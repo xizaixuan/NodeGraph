@@ -1,6 +1,4 @@
-﻿using ModifierNodeGraph;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -9,6 +7,7 @@ using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
 using static UnityEditor.Experimental.UIElements.GraphView.Port;
+using Object = UnityEngine.Object;
 
 namespace ModifierNodeGraph
 {
@@ -80,7 +79,7 @@ namespace ModifierNodeGraph
             // Path.GetExtension returns the extension prefixed with ".", so we remove it. We force lower case such that
             // the comparison will be case-insensitive.
             extension = extension.Substring(1).ToLowerInvariant();
-            System.Type graphType;
+            Type graphType;
             switch (extension)
             {
                 case ModifierGraphImporter.Extension:
@@ -127,19 +126,6 @@ namespace ModifierNodeGraph
             nodeGraphView.AddStyleSheetPath("Styles/NodeGraphView");
 
             root.Add(nodeGraphView);
-        }
-    }
-
-    [CustomEditor(typeof(NodeGraph))]
-    public class GraphAssetInspector : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            if (GUILayout.Button("Open Graph Window"))
-            {
-                var window = NodeGraphWindow.Open();
-                window.InitializeGraph(target as NodeGraph);
-            }
         }
     }
 }

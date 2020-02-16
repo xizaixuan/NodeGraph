@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable, CreateAssetMenu(fileName = "NodeGraph", menuName = "NodeGraph")]
-public class NodeGraph : ScriptableObject, IGraph
+[Serializable]
+public class NodeGraph : IGraph
 {
     public IGraphObject owner { get; set; }
 
@@ -116,6 +116,4 @@ public class NodeGraph : ScriptableObject, IGraph
         m_NodeDictionary.TryGetValue(guid, out node);
         return node;
     }
-
-
 }
