@@ -59,5 +59,9 @@ namespace ModifierNodeGraph
             drawState.position = newPosition;
             TargetNode.drawState = drawState;
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

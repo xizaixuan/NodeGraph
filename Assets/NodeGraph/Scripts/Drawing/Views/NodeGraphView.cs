@@ -23,19 +23,7 @@ public class NodeGraphView : GraphView
 
         ConnectorListener = new EdgeConnectorListener(graph);
 
-        InitializeManipulators();
-        InitializeNodeViews();
-        InitializeEdges();
-
         this.StretchToParentSize();
-    }
-
-    private void InitializeManipulators()
-    {
-        this.AddManipulator(new ContentDragger());
-        this.AddManipulator(new SelectionDragger());
-        this.AddManipulator(new RectangleSelector());
-        this.AddManipulator(new ClickSelector());
     }
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -58,33 +46,6 @@ public class NodeGraphView : GraphView
         drawState.position = new Rect(position, new Vector2(50, 50));
         node.drawState = drawState;
         Graph.AddNode(node);
-        AddNodeView(node);
-    }
-
-    private void AddNodeView(ModifierNode node)
-    {
-        var viewType = NodeProvider.GetNodeViewTypeFromNodeType(node.GetType());
-
-        if (viewType != null)
-        {
-            var nodeView = Activator.CreateInstance(viewType) as NodeView;
-            nodeView.Initialize(node, ConnectorListener);
-            AddElement(nodeView);
-        }
-    }
-
-    private void InitializeNodeViews()
-    {
-        foreach (var node in Graph.GetNodes<ModifierNode>())
-            AddNodeView(node);
-    }
-
-    private void InitializeEdges()
-    {
-        foreach (var edge in Graph.edges)
-        {
-            AddEdgeView(edge);
-        }
     }
 
     EdgeView AddEdgeView(IEdge edge)

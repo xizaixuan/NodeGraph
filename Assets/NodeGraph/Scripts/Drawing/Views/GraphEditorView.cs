@@ -57,6 +57,61 @@ namespace ModifierNodeGraph
             return graphViewChange;
         }
 
+        HashSet<NodeView> m_NodeViewHashSet = new HashSet<NodeView>();
+
+        public void HandleGraphChanges()
+        {
+            foreach (var node in m_Graph.removedNodes)
+            {
+                var nodeView = m_GraphView.nodes.ToList().OfType<NodeView>().FirstOrDefault(p => p.node != null && p.node.guid == node.guid);
+                if (nodeView != null)
+                {
+                    nodeView.Dispose();
+                    nodeView.userData = null;
+                    m_GraphView.RemoveElement(nodeView);
+                }
+            }
+
+            foreach (var node in m_Graph.addedNodes)
+            {
+                AddNode(node);
+            }
+            
+            var nodesToUpdate = m_NodeViewHashSet;
+            nodesToUpdate.Clear();
+
+            foreach (var edge in m_Graph.removedEdges)
+            {
+                var edgeView = m_GraphView.graphElements.ToList().OfType<EdgeView>().FirstOrDefault(p => p.userData is IEdge && Equals((IEdge)p.userData, edge));
+                if (edgeView != null)
+                {
+                    var nodeView = edgeView.input.node as NodeView;
+                    if (nodeView != null && nodeView.node != null)
+                    {
+                        nodesToUpdate.Add(nodeView);
+                    }
+                    edgeView.output.Disconnect(edgeView);
+                    edgeView.input.Disconnect(edgeView);
+
+                    edgeView.output = null;
+                    edgeView.input = null;
+
+                    m_GraphView.RemoveElement(edgeView);
+                }
+            }
+
+            foreach (var edge in m_Graph.addedEdges)
+            {
+                var edgeView = AddEdge(edge);
+                if (edgeView != null)
+                    nodesToUpdate.Add((NodeView)edgeView.input.node);
+            }
+
+            foreach (var node in nodesToUpdate)
+            {
+            }
+        }
+
         void AddNode(INode node)
         {
             var nodeView = new NodeView { userData = node };

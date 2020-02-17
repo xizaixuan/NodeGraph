@@ -139,8 +139,11 @@ namespace ModifierNodeGraph
                         persistenceKey = selectedGuid,
                     };
                 }
+
+                graphEditorView.HandleGraphChanges();
+                nodeGraph.ClearChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 m_GraphEditorView = null;
                 graphObject = null;

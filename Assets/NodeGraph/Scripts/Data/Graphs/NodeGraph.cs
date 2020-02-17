@@ -12,6 +12,8 @@ namespace ModifierNodeGraph
     {
         public IGraphObject owner { get; set; }
 
+        #region Node data
+
         List<ModifierNode> m_Nodes = new List<ModifierNode>();
 
         Dictionary<Guid, INode> m_NodeDictionary = new Dictionary<Guid, INode>();
@@ -21,11 +23,56 @@ namespace ModifierNodeGraph
             return m_Nodes.Where(x => x != null).OfType<T>();
         }
 
+        [NonSerialized]
+        List<INode> m_AddedNodes = new List<INode>();
+
+        public IEnumerable<INode> addedNodes
+        {
+            get { return m_AddedNodes; }
+        }
+
+        [NonSerialized]
+        List<INode> m_RemovedNodes = new List<INode>();
+
+        public IEnumerable<INode> removedNodes
+        {
+            get { return m_RemovedNodes; }
+        }
+
+        #endregion
+
+        #region Edge data
         List<IEdge> m_Edges = new List<IEdge>();
 
         public IEnumerable<IEdge> edges
         {
             get { return m_Edges; }
+        }
+
+        [NonSerialized]
+        List<IEdge> m_AddedEdges = new List<IEdge>();
+
+        public IEnumerable<IEdge> addedEdges
+        {
+            get { return m_AddedEdges; }
+        }
+
+        [NonSerialized]
+        List<IEdge> m_RemovedEdges = new List<IEdge>();
+
+        public IEnumerable<IEdge> removedEdges
+        {
+            get { return m_RemovedEdges; }
+        }
+
+        #endregion
+
+        public void ClearChanges()
+        {
+            m_AddedNodes.Clear();
+            m_RemovedNodes.Clear();
+            m_AddedEdges.Clear();
+            m_RemovedEdges.Clear();
         }
 
         public void AddNode(INode node)
@@ -47,6 +94,7 @@ namespace ModifierNodeGraph
 
             m_Nodes.Add(modifierNode);
             m_NodeDictionary.Add(modifierNode.guid, modifierNode);
+            m_AddedNodes.Add(modifierNode);
         }
 
         public void RemoveNode(INode node)
@@ -60,6 +108,7 @@ namespace ModifierNodeGraph
 
             m_Nodes.Remove(node as ModifierNode);
             m_NodeDictionary.Remove(modifierNode.guid);
+            m_RemovedNodes.Add(node);
         }
 
         IEdge ConnectNoValidate(SlotReference fromSlotRef, SlotReference toSlotRef)
@@ -99,7 +148,7 @@ namespace ModifierNodeGraph
 
             var newEdge = new Edge(outputSlot, inputSlot);
             m_Edges.Add(newEdge);
-            //        m_AddedEdges.Add(newEdge);
+            m_AddedEdges.Add(newEdge);
             //        AddEdgeToNodeEdges(newEdge);
 
             //Debug.LogFormat("Connected edge: {0} -> {1} ({2} -> {3})\n{4}", newEdge.outputSlot.nodeGuid, newEdge.inputSlot.nodeGuid, fromNode.name, toNode.name, Environment.StackTrace);
