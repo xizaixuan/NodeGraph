@@ -109,5 +109,55 @@ namespace ModifierNodeGraph
 
             Repaint();
         }
+
+        void Update()
+        {
+            try
+            {
+                if (graphObject == null && selectedGuid != null)
+                {
+                    var guid = selectedGuid;
+                    selectedGuid = null;
+                    Initialize(guid);
+                }
+
+                if (graphObject == null)
+                {
+                    Close();
+                    return;
+                }
+
+                var nodeGraph = graphObject.graph as NodeGraph;
+                if (nodeGraph == null)
+                    return;
+
+                if (graphEditorView == null)
+                {
+                    var asset = AssetDatabase.LoadAssetAtPath<Object>(AssetDatabase.GUIDToAssetPath(selectedGuid));
+                    graphEditorView = new GraphEditorView(this, nodeGraph)
+                    {
+                        persistenceKey = selectedGuid,
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                m_GraphEditorView = null;
+                graphObject = null;
+                Debug.LogException(e);
+                throw;
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (graphObject != null)
+            {
+                string nameOfFile = AssetDatabase.GUIDToAssetPath(selectedGuid);
+                DestroyImmediate(graphObject);
+            }
+
+            graphEditorView = null;
+        }
     }
 }

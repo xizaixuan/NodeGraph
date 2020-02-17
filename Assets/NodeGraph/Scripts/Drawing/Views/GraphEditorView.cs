@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
+using EdgeView = UnityEditor.Experimental.UIElements.GraphView.Edge;
 
 namespace ModifierNodeGraph
 {
@@ -57,10 +59,53 @@ namespace ModifierNodeGraph
 
         void AddNode(INode node)
         {
+            var nodeView = new NodeView { userData = node };
+            m_GraphView.AddElement(nodeView);
+            nodeView.Initialize(node as ModifierNode, m_EdgeConnectorListener);
+            nodeView.MarkDirtyRepaint();
         }
 
-        Edge AddEdge(IEdge edge)
+        EdgeView AddEdge(IEdge edge)
         {
+            var sourceNode = m_Graph.GetNodeFromGuid(edge.outputSlot.nodeGuid);
+            if (sourceNode == null)
+            {
+                Debug.LogWarning("Source node is null");
+                return null;
+            }
+            var sourceSlot = sourceNode.FindOutputSlot<ModifierSlot>(edge.outputSlot.slotId);
+
+            var targetNode = m_Graph.GetNodeFromGuid(edge.inputSlot.nodeGuid);
+            if (targetNode == null)
+            {
+                Debug.LogWarning("Target node is null");
+                return null;
+            }
+            var targetSlot = targetNode.FindInputSlot<ModifierSlot>(edge.inputSlot.slotId);
+
+            var sourceNodeView = m_GraphView.nodes.ToList().OfType<NodeView>().FirstOrDefault(x => x.node == sourceNode);
+            if (sourceNodeView != null)
+            {
+                var sourceAnchor = sourceNodeView.outputContainer.Children().OfType<ModifierPort>().FirstOrDefault(x => x.slot.Equals(sourceSlot));
+
+                var targetNodeView = m_GraphView.nodes.ToList().OfType<NodeView>().FirstOrDefault(x => x.node == targetNode);
+                var targetAnchor = targetNodeView.inputContainer.Children().OfType<ModifierPort>().FirstOrDefault(x => x.slot.Equals(targetSlot));
+
+                var edgeView = new EdgeView
+                {
+                    userData = edge,
+                    output = sourceAnchor,
+                    input = targetAnchor
+                };
+                edgeView.output.Connect(edgeView);
+                edgeView.input.Connect(edgeView);
+                m_GraphView.AddElement(edgeView);
+                sourceNodeView.RefreshPorts();
+                targetNodeView.RefreshPorts();
+
+                return edgeView;
+            }
+
             return null;
         }
 
