@@ -7,6 +7,7 @@ using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
 using EdgeView = UnityEditor.Experimental.UIElements.GraphView.Edge;
+using Object = UnityEngine.Object;
 
 namespace ModifierNodeGraph
 {
@@ -15,6 +16,8 @@ namespace ModifierNodeGraph
         NodeGraphView m_GraphView;
 
         NodeGraph m_Graph;
+
+        SearchWindowProvider m_SearchWindowProvider;
 
         EdgeConnectorListener m_EdgeConnectorListener;
 
@@ -40,6 +43,13 @@ namespace ModifierNodeGraph
 
                 m_GraphView.graphViewChanged = GraphViewChanged;
             }
+
+            m_SearchWindowProvider = ScriptableObject.CreateInstance<SearchWindowProvider>();
+            m_SearchWindowProvider.Initialize(editorWindow, m_Graph, m_GraphView);
+            m_GraphView.nodeCreationRequest = (c) =>
+            {
+                SearchWindow.Open(new SearchWindowContext(c.screenMousePosition), m_SearchWindowProvider);
+            };
 
             m_EdgeConnectorListener = new EdgeConnectorListener(m_Graph);
 
@@ -170,6 +180,12 @@ namespace ModifierNodeGraph
             if (m_GraphView != null)
             {
                 m_GraphView = null;
+            }
+
+            if (m_SearchWindowProvider != null)
+            {
+                Object.DestroyImmediate(m_SearchWindowProvider);
+                m_SearchWindowProvider = null;
             }
         }
     }
