@@ -29,7 +29,6 @@ namespace ModifierNodeGraph
         {
             public string[] title;
             public ModifierNode node;
-            public int compatibleSlotId;
 
         }
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
@@ -121,31 +120,30 @@ namespace ModifierNodeGraph
             return tree;
         }
 
-        List<int> m_Ids;
-        List<ISlot> m_Slots = new List<ISlot>();
 
         void AddEntries(ModifierNode node, string[] title, List<NodeEntry> nodeEntries)
         {
-            m_Slots.Clear();
-            node.GetSlots(m_Slots);
-
-            foreach (var slot in m_Slots)
+            nodeEntries.Add(new NodeEntry
             {
-                var entryTitle = new string[title.Length];
-                title.CopyTo(entryTitle, 0);
-                entryTitle[entryTitle.Length - 1] += ": " + slot.displayName;
-                nodeEntries.Add(new NodeEntry
-                {
-                    title = entryTitle,
-                    node = node,
-                    compatibleSlotId = slot.id
-                });
-            }
+                node = node,
+                title = title,
+            });
         }
 
-        public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
+        public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
         {
-            return false;
+            var nodeEntry = (NodeEntry)entry.userData;
+            var node = nodeEntry.node;
+
+            var drawState = node.drawState;
+            var windowMousePosition = m_EditorWindow.GetRootVisualContainer().ChangeCoordinatesTo(m_EditorWindow.GetRootVisualContainer().parent, context.screenMousePosition - m_EditorWindow.position.position);
+            var graphMousePosition = m_GraphView.contentViewContainer.WorldToLocal(windowMousePosition);
+            drawState.position = new Rect(graphMousePosition, Vector2.zero);
+            node.drawState = drawState;
+            
+            m_Graph.AddNode(node);
+
+            return true;
         }
     }
 }

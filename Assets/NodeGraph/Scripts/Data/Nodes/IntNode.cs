@@ -4,12 +4,9 @@ using UnityEngine;
 
 namespace ModifierNodeGraph
 {
-    [NodeMenuItem("CreateNode/IntNode")]
+    [Title("Input")]
     public class IntNode : ModifierNode
     {
-        [Input]
-        public int Value;
-
         public IntNode()
         {
             AddSlot(new ModifierSlot(0, "InputSlot", "ModifierOutput", SlotType.Input));

@@ -7,7 +7,6 @@ using static UnityEditor.Experimental.UIElements.GraphView.Port;
 
 namespace ModifierNodeGraph
 {
-    [BindNode(typeof(ModifierNode))]
     public class NodeView : Node
     {
         IEdgeConnectorListener m_ConnectorListener;
