@@ -7,31 +7,30 @@ using static UnityEditor.Experimental.UIElements.GraphView.Port;
 
 namespace ModifierNodeGraph
 {
-    public class NodeView : Node
+    public sealed class NodeView : Node
     {
         IEdgeConnectorListener m_ConnectorListener;
 
-        public ModifierNode TargetNode = null;
-        public ModifierNode node { get { return TargetNode; } }
+        public ModifierNode node { get; private set; }
 
-
-
-        public void Initialize(ModifierNode node, IEdgeConnectorListener connectorListener)
+        public void Initialize(ModifierNode inNode, IEdgeConnectorListener connectorListener)
         {
             m_ConnectorListener = connectorListener;
 
-            TargetNode = node;
+            node = inNode;
 
-            InitializePorts();
+            persistenceKey = node.guid.ToString();
 
-            InitializeView();
+            title = inNode.name;
 
-            Enable();
+            AddSlots(node.GetSlots<ModifierSlot>());
+
+            SetPosition(new Rect(node.drawState.position.x, node.drawState.position.y, 0, 0));
         }
 
-        public void InitializePorts()
+        void AddSlots(IEnumerable<ModifierSlot> slots)
         {
-            foreach (var slot in TargetNode.GetSlots<ModifierSlot>())
+            foreach (var slot in slots)
             {
                 var port = ModifierPort.Create(slot, m_ConnectorListener);
                 if (slot.isOutputSlot)
@@ -41,26 +40,9 @@ namespace ModifierNodeGraph
             }
         }
 
-        void InitializeView()
-        {
-            SetPosition(TargetNode.drawState.position);
-        }
-
-        public virtual void Enable()
-        {
-        }
-
-        public override void SetPosition(Rect newPosition)
-        {
-            base.SetPosition(newPosition);
-
-            var drawState = TargetNode.drawState;
-            drawState.position = newPosition;
-            TargetNode.drawState = drawState;
-        }
-
         public void Dispose()
         {
+            node = null;
         }
     }
 }

@@ -9,6 +9,9 @@ namespace ModifierNodeGraph
     {
         private Guid m_Guid;
 
+        [SerializeField]
+        private string m_Name;
+
         private DrawState m_DrawState;
 
         public IGraph owner { get; set; }
@@ -29,6 +32,12 @@ namespace ModifierNodeGraph
         public Guid guid
         {
             get { return m_Guid; }
+        }
+
+        public string name
+        {
+            get { return m_Name; }
+            set { m_Name = value; }
         }
 
         public void GetInputSlots<T>(List<T> foundSlots) where T : ISlot

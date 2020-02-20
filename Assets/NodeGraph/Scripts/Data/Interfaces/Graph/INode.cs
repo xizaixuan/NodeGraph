@@ -10,7 +10,7 @@ namespace ModifierNodeGraph
         IGraph owner { get; set; }
         Guid guid { get; }
         DrawState drawState { get; set; }
-
+        string name { get; set; }
         void GetInputSlots<T>(List<T> foundSlots) where T : ISlot;
         void GetOutputSlots<T>(List<T> foundSlots) where T : ISlot;
         void GetSlots<T>(List<T> foundSlots) where T : ISlot;
