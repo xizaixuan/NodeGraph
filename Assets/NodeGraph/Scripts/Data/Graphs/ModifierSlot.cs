@@ -8,14 +8,11 @@ namespace ModifierNodeGraph
 
         string m_DisplayName = "Not Initilaized";
 
-        string m_ModifierOutputName;
-
-        public ModifierSlot(int slotId, string displayName, string modifierOutputName, SlotType slotType)
+        public ModifierSlot(int slotId, string displayName, SlotType slotType)
         {
             m_Id = slotId;
             m_DisplayName = displayName;
             m_SlotType = slotType;
-            m_ModifierOutputName = modifierOutputName;
         }
 
         public int id
@@ -47,12 +44,6 @@ namespace ModifierNodeGraph
         }
 
         public INode owner { get; set; }
-
-        public string modifierOutputName
-        {
-            get { return m_ModifierOutputName; }
-            private set { m_ModifierOutputName = value; }
-        }
 
         public bool IsCompatibleWith(ModifierSlot otherSlot)
         {
