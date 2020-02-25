@@ -39,6 +39,7 @@ namespace ModifierNodeGraph
                 m_GraphEditorView = value;
                 if (m_GraphEditorView != null)
                 {
+                    m_GraphEditorView.saveRequested += UpdateAsset;
                     this.GetRootVisualContainer().Add(graphEditorView);
                 }
             }
@@ -157,10 +158,43 @@ namespace ModifierNodeGraph
             if (graphObject != null)
             {
                 string nameOfFile = AssetDatabase.GUIDToAssetPath(selectedGuid);
+                UpdateAsset();
                 DestroyImmediate(graphObject);
             }
 
             graphEditorView = null;
+        }
+
+        public void UpdateAsset()
+        {
+            if (selectedGuid != null && graphObject != null)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(selectedGuid);
+                if (string.IsNullOrEmpty(path) || graphObject == null)
+                    return;
+
+                if (m_GraphObject.graph.GetType() == typeof(NodeGraph))
+                    UpdateGraphOnDisk(path);
+            }
+        }
+
+        void UpdateGraphOnDisk(string path)
+        {
+            var graph = graphObject.graph as IGraph;
+            if (graph == null)
+                return;
+
+            UpdateGraphOnDisk(path, graph);
+        }
+
+        static void UpdateGraphOnDisk(string path, IGraph graph)
+        {
+            var graphImporter = AssetImporter.GetAtPath(path) as ModifierGraphImporter;
+            if (graphImporter == null)
+                return;
+
+            File.WriteAllText(path, EditorJsonUtility.ToJson(graph, true));
+            graphImporter.SaveAndReimport();
         }
     }
 }

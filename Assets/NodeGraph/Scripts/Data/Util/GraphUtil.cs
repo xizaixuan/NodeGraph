@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Text;
+using UnityEditor.Graphing.Util;
 
 namespace ModifierNodeGraph
 {
@@ -20,6 +23,32 @@ namespace ModifierNodeGraph
                 newText.Append(text[i]);
             }
             return newText.ToString();
+        }
+
+        static Dictionary<SerializationHelper.TypeSerializationInfo, SerializationHelper.TypeSerializationInfo> s_LegacyTypeRemapping;
+
+        public static Dictionary<SerializationHelper.TypeSerializationInfo, SerializationHelper.TypeSerializationInfo> GetLegacyTypeRemapping()
+        {
+            if (s_LegacyTypeRemapping == null)
+            {
+                s_LegacyTypeRemapping = new Dictionary<SerializationHelper.TypeSerializationInfo, SerializationHelper.TypeSerializationInfo>();
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    foreach (var type in assembly.GetTypesOrNothing())
+                    {
+                        if (type.IsAbstract)
+                            continue;
+                        foreach (var attribute in type.GetCustomAttributes(typeof(FormerNameAttribute), false))
+                        {
+                            var legacyAttribute = (FormerNameAttribute)attribute;
+                            var serializationInfo = new SerializationHelper.TypeSerializationInfo { fullName = legacyAttribute.fullName };
+                            s_LegacyTypeRemapping[serializationInfo] = SerializationHelper.GetTypeSerializableAsString(type);
+                        }
+                    }
+                }
+            }
+
+            return s_LegacyTypeRemapping;
         }
     }
 }

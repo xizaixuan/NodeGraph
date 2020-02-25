@@ -21,6 +21,8 @@ namespace ModifierNodeGraph
 
         EdgeConnectorListener m_EdgeConnectorListener;
 
+        public Action saveRequested { get; set; }
+
         public NodeGraphView graphView
         {
             get { return m_GraphView; }
@@ -31,6 +33,19 @@ namespace ModifierNodeGraph
             AddStyleSheetPath("Styles/GraphEditorView");
 
             m_Graph = graph;
+
+            var toolbar = new IMGUIContainer(() =>
+            {
+                GUILayout.BeginHorizontal(EditorStyles.toolbar);
+                if (GUILayout.Button("Save Asset", EditorStyles.toolbarButton))
+                {
+                    if (saveRequested != null)
+                        saveRequested();
+                }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+            });
+            Add(toolbar);
 
             var content = new VisualElement { name = "content" };
             {

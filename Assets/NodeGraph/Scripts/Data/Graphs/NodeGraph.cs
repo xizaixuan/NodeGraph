@@ -8,7 +8,7 @@ using UnityEngine;
 namespace ModifierNodeGraph
 {
     [Serializable]
-    public class NodeGraph : IGraph
+    public class NodeGraph : IGraph, ISerializationCallbackReceiver
     {
         public IGraphObject owner { get; set; }
 
@@ -22,6 +22,9 @@ namespace ModifierNodeGraph
         {
             return m_Nodes.Where(x => x != null).OfType<T>();
         }
+
+        [SerializeField]
+        List<SerializationHelper.JSONSerializedElement> m_SerializableNodes = new List<SerializationHelper.JSONSerializedElement>();
 
         [NonSerialized]
         List<INode> m_AddedNodes = new List<INode>();
@@ -166,6 +169,25 @@ namespace ModifierNodeGraph
             INode node;
             m_NodeDictionary.TryGetValue(guid, out node);
             return node;
+        }
+
+        public void OnBeforeSerialize()
+        {
+            m_SerializableNodes = SerializationHelper.Serialize(GetNodes<INode>());
+        }
+
+        public void OnAfterDeserialize()
+        {
+            var nodes = SerializationHelper.Deserialize<INode>(m_SerializableNodes, GraphUtil.GetLegacyTypeRemapping());
+            m_Nodes = new List<ModifierNode>(nodes.Count);
+            m_NodeDictionary = new Dictionary<Guid, INode>(nodes.Count);
+            foreach (var node in nodes.OfType<ModifierNode>())
+            {
+                node.owner = this;
+                m_Nodes.Add(node);
+                m_NodeDictionary.Add(node.guid, node);
+            }
+            m_SerializableNodes = null;
         }
     }
 }
