@@ -79,6 +79,20 @@ namespace ModifierNodeGraph
 
         GraphViewChange GraphViewChanged(GraphViewChange graphViewChange)
         {
+            if (graphViewChange.movedElements != null)
+            {
+                foreach (var element in graphViewChange.movedElements)
+                {
+                    var node = element.userData as INode;
+                    if (node == null)
+                        continue;
+
+                    var drawState = node.drawState;
+                    drawState.position = element.GetPosition();
+                    node.drawState = drawState;
+                }
+            }
+
             return graphViewChange;
         }
 

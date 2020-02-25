@@ -6,6 +6,7 @@ namespace ModifierNodeGraph
     [Serializable]
     public struct DrawState
     {
+        [SerializeField]
         private Rect m_Position;
 
         public Rect position

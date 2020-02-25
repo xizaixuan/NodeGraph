@@ -5,14 +5,23 @@ using UnityEngine;
 
 namespace ModifierNodeGraph
 {
-    public abstract class ModifierNode : INode
+    [Serializable]
+    public abstract class ModifierNode : INode, ISerializationCallbackReceiver
     {
+        [NonSerialized]
         private Guid m_Guid;
+
+        [SerializeField]
+        private string m_GuidSerialized;
 
         [SerializeField]
         private string m_Name;
 
+        [SerializeField]
         private DrawState m_DrawState;
+
+        [NonSerialized]
+        private List<ISlot> m_Slots = new List<ISlot>();
 
         public IGraph owner { get; set; }
 
@@ -21,8 +30,6 @@ namespace ModifierNodeGraph
             get { return m_DrawState; }
             set { m_DrawState = value; }
         }
-
-        private List<ISlot> m_Slots = new List<ISlot>();
 
         protected ModifierNode()
         {
@@ -121,6 +128,19 @@ namespace ModifierNodeGraph
                     return (T)slot;
             }
             return default(T);
+        }
+
+        public void OnBeforeSerialize()
+        {
+            m_GuidSerialized = m_Guid.ToString();
+        }
+
+        public void OnAfterDeserialize()
+        {
+            if (!string.IsNullOrEmpty(m_GuidSerialized))
+                m_Guid = new Guid(m_GuidSerialized);
+            else
+                m_Guid = Guid.NewGuid();
         }
     }
 }
