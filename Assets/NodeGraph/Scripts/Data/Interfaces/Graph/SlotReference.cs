@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ModifierNodeGraph
 {
     [Serializable]
-    public struct SlotReference : IEquatable<SlotReference>
+    public struct SlotReference : ISerializationCallbackReceiver, IEquatable<SlotReference>
     {
         [SerializeField]
         private int m_SlotId;

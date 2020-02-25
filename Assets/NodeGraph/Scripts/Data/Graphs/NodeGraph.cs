@@ -52,6 +52,9 @@ namespace ModifierNodeGraph
             get { return m_Edges; }
         }
 
+        [SerializeField]
+        List<SerializationHelper.JSONSerializedElement> m_SerializableEdges = new List<SerializationHelper.JSONSerializedElement>();
+
         [NonSerialized]
         List<IEdge> m_AddedEdges = new List<IEdge>();
 
@@ -174,6 +177,7 @@ namespace ModifierNodeGraph
         public void OnBeforeSerialize()
         {
             m_SerializableNodes = SerializationHelper.Serialize(GetNodes<INode>());
+            m_SerializableEdges = SerializationHelper.Serialize<IEdge>(m_Edges);
         }
 
         public void OnAfterDeserialize()
@@ -184,10 +188,14 @@ namespace ModifierNodeGraph
             foreach (var node in nodes.OfType<ModifierNode>())
             {
                 node.owner = this;
+                node.UpdateNodeAfterDeserialization();
                 m_Nodes.Add(node);
                 m_NodeDictionary.Add(node.guid, node);
             }
             m_SerializableNodes = null;
+
+            m_Edges = SerializationHelper.Deserialize<IEdge>(m_SerializableEdges, GraphUtil.GetLegacyTypeRemapping());
+            m_SerializableEdges = null;
         }
     }
 }
