@@ -23,6 +23,9 @@ namespace ModifierNodeGraph
         [NonSerialized]
         private List<ISlot> m_Slots = new List<ISlot>();
 
+        [SerializeField]
+        List<SerializationHelper.JSONSerializedElement> m_SerializableSlots = new List<SerializationHelper.JSONSerializedElement>();
+
         public IGraph owner { get; set; }
 
         public DrawState drawState
@@ -133,6 +136,7 @@ namespace ModifierNodeGraph
         public void OnBeforeSerialize()
         {
             m_GuidSerialized = m_Guid.ToString();
+            m_SerializableSlots = SerializationHelper.Serialize<ISlot>(m_Slots);
         }
 
         public void OnAfterDeserialize()
@@ -141,6 +145,16 @@ namespace ModifierNodeGraph
                 m_Guid = new Guid(m_GuidSerialized);
             else
                 m_Guid = Guid.NewGuid();
+
+            m_Slots = SerializationHelper.Deserialize<ISlot>(m_SerializableSlots, GraphUtil.GetLegacyTypeRemapping());
+            m_SerializableSlots = null;
+            foreach (var s in m_Slots)
+                s.owner = this;
+
+            UpdateNodeAfterDeserialization();
         }
+
+        public virtual void UpdateNodeAfterDeserialization()
+        { }
     }
 }

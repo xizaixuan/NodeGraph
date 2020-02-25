@@ -12,7 +12,7 @@ namespace ModifierNodeGraph
     {
         protected CodeFunctionNode()
         {
-            Update();
+            UpdateNodeAfterDeserialization();
         }
 
         protected enum Binding
@@ -37,7 +37,7 @@ namespace ModifierNodeGraph
         protected abstract MethodInfo GetFunctionToConvert();
 
     
-        public void Update()
+        public override void UpdateNodeAfterDeserialization()
         {
             var method = GetFunctionToConvert();
 
@@ -52,7 +52,6 @@ namespace ModifierNodeGraph
             if (slotAtributes.GroupBy(x => x.slotId).Any(x => x.Count() > 1))
                 throw new ArgumentException("Duplicate SlotAttribute on " + method.Name);
 
-            List<ModifierSlot> slots = new List<ModifierSlot>();
             foreach (var par in method.GetParameters())
             {
                 var attribute = GetSlotAttribute(par);
