@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
@@ -10,6 +11,7 @@ namespace ModifierNodeGraph
     public sealed class NodeView : Node
     {
         IEdgeConnectorListener m_ConnectorListener;
+        VisualElement m_ControlItems;
 
         public ModifierNode node { get; private set; }
 
@@ -22,6 +24,23 @@ namespace ModifierNodeGraph
             persistenceKey = node.guid.ToString();
 
             title = inNode.name;
+
+            var contents = this.Q("contents");
+
+            // Add controls container
+            var controlsContainer = new VisualElement { name = "controls" };
+            {
+                m_ControlItems = new VisualElement { name = "items" };
+                controlsContainer.Add(m_ControlItems);
+
+                // Instantiate control views from node
+                foreach (var propertyInfo in node.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    foreach (IControlAttribute attribute in propertyInfo.GetCustomAttributes(typeof(IControlAttribute), false))
+                        m_ControlItems.Add(attribute.InstantiateControl(node, propertyInfo));
+            }
+
+            if (m_ControlItems.childCount > 0)
+                contents.Add(controlsContainer);
 
             AddSlots(node.GetSlots<ModifierSlot>());
 
