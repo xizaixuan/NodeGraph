@@ -1,9 +1,9 @@
-EnumControlView {
+StringControlView {
     flex-direction: row;
 }
 
-EnumControlView > EnumField {
-    width: 90;
+StringControlView > TextField {
+    width: 80;
     flex: 1;
     margin-left: 0;
     margin-right: 8;
@@ -11,7 +11,7 @@ EnumControlView > EnumField {
     margin-bottom: 4;
 }
 
-EnumControlView > Label {
+StringControlView > Label {
     width: 50;
     padding-left: 0;
     padding-right: 0;
